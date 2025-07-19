@@ -1,0 +1,55 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CherryCanvas ✨</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header>CherryCanvas</header>
+
+  <div class="container">
+    <div class="grid">
+      {% for post in posts %}
+      <div class="card">
+        <!-- Delete Button -->
+        <form action="{{ url_for('delete_post', post_index=loop.index0) }}" method="POST" class="delete-form">
+          <button type="submit" class="delete-btn" onclick="return confirm('Delete this post?');">🗑️</button>
+        </form>
+
+        {% if post.image_url %}
+        <img src="{{ post.image_url }}" alt="{{ post.title }}">
+        {% endif %}
+
+        <h2>{{ post.title }}</h2>
+        <p>{{ post.content }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Floating Add Button -->
+  <button class="floating-btn" onclick="toggleModal()">＋</button>
+
+  <!-- Modal for Adding Blog -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <span class="close-btn" onclick="toggleModal()">×</span>
+      <h2>Add New Blog</h2>
+      <form method="POST" action="/add" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Blog title" required>
+        <textarea name="content" placeholder="Write something..." required></textarea>
+        <input type="file" name="image">
+        <button type="submit">Post</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function toggleModal() {
+      document.getElementById('modal').classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
